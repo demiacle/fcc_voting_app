@@ -1,0 +1,18 @@
+GOAL build this modular so I can transform into my pubg voting map locations idea
+
+* = implemented on both
+& = implemented on pubg project only
+/ = implemented on fcc project only
+
+
+* authenticate with steam
+/ allow authenticated user to access polls they created
+* allow authenticated user to share with twitter via click and confirm
+/ allow authenticated user to show all polls you created and their results on a single page as well as polls you've voted for and your vote
+/ allow authenticated user to delete their polls
+/ allow auth user to create poll with n number of items
+/ non auth user can vote and see results IP LOCKED
+/ auth user can vote and see results USERID LOCKED
+/ auth users can add new options
+
+

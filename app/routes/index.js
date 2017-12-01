@@ -1,9 +1,13 @@
 'use strict';
 
 var path = process.cwd();
+var p = require('path')
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 
 module.exports = function (app, passport) {
+	
+	app.set("view engine", "pug" )
+	app.set("views", p.join(__dirname, "public"));
 
 	function isLoggedIn (req, res, next) {
 		if (req.isAuthenticated()) {
@@ -20,9 +24,18 @@ module.exports = function (app, passport) {
 			res.sendFile(path + '/public/index.html');
 		});
 
+// TODO remove login route
 	app.route('/login')
 		.get(function (req, res) {
-			res.sendFile(path + '/public/login.html');
+			// query db for title and votes
+			var polls = { polls: [
+				{ title: 'hi', votes: 3 },
+				{ title: 'hddi', votes: 2 },
+				{ title: 'hfffafi', votes: 5 },
+				{ title: 'hf34321i', votes: 7 },
+				{ title: 'h09i', votes: 9 }
+				]}
+			res.render(path + '/public/login.pug', polls );
 		});
 
 	app.route('/logout')
