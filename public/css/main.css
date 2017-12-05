@@ -163,9 +163,16 @@ header {
 	margin: 0 0 14px 0;
 	text-align: center;
 }
+
+.pollInfo h1 {
+    background-color: #9cd5ff;
+    font-family: sans-serif;
+    margin-bottom: 20px;
+}
 h1 {
 	margin-bottom: 0;
     text-shadow: 0px 1px 1px #cdeaff;
+    text-align: center;
 }
 h3 {
 	margin: 0;
@@ -176,16 +183,88 @@ h4 {
 p {
 	margin: 8px 0 0 0;
 }
-
+select, button {
+    border-radius: 30px;
+    margin: auto;
+    display: block;
+    font-size: 20px;
+    padding: 7px;
+}
+#shareButton {
+    display: inline-block;
+}
 .container {
 	font-family: 'Barlow', sans-serif;
     min-width: 800px;
     color: #333333;
 }
 
+input[type="radio"] {
+	display: none;
+}
+
+input[type="radio"]:checked + label::before {
+    background-color: #55b1f5;
+    margin-right: 14px;
+    border: 3px solid #6cb6ec;
+}
+input[type="radio"]:checked + label {
+    background-color: #f3faff;
+    border-radius: 20px;
+}
+input[type="radio"] + label:hover {
+    background-color: #f3faff;
+    border-radius: 20px;
+}
+label {
+	display: flex;
+	align-items: center;
+    padding: 4px;
+    font-size: 16pt;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all 0.25s linear;
+}
+.addOption:hover {
+    background-color: #9cd5ff;
+}
+button.addOption:active {
+    top: 1px;
+    position: relative;
+}
+.twitter-share-button {
+  float: left;
+  margin: 8px;
+  margin-right: -60px;
+}
+.addOption {
+  margin: 0;
+  background-color: #d6ebfa;
+  border: none;
+  padding-right: 18px;
+  cursor: pointer;
+}
+.addOption span {
+  margin-right: 14px;
+  padding: 3px;
+}
+
+label::before {
+	display: block;
+	height: 1.125rem;
+	width: 1.125rem;
+	margin-right: 0.625rem;
+	content: "";
+	border: 3px solid #9cd5ff;
+	border-radius: 50%;
+	transition: all 0.25s linear;
+}
+
+
 .container p {
 	text-align: center;
 	padding: 0;
+    padding-bottom: 20px;
 }
 
 /****** Header Styling ******/
@@ -246,27 +325,42 @@ header a ~ p {
 	margin-left: 10px
 }
 
-.polls {
-	border-top: 1px solid #eee5e5;
+.pollHeader {
+    background-color: #D0ECFF;
+    font-family: sans-serif;
+    padding-top: 6px;
+}
+
+.polls, .pollInfo {
     width: 80%;
     margin: auto;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #9cd5ff;
+    padding-bottom: 20px;
 }
 
 .title, .votes {
 	display: inline-block;
 }
 
+.chartContainer, .pollDescription {
+    width: 42%;
+    display: inline-block;
+    padding-left: 7%;
+}
+
 .title {
-	width: 88%;
+	width: 66%;
+    padding-left: 14px;
 }
 
 .votes {
-	width : 10%;
+	width: 9%;
     text-align: center;
 }
 
 .poll {
-    border-bottom: 1px solid #eee5e5;
+    border-bottom: 1px solid #e8eee5;
     font-size: 16pt;
     padding: 2px;
     font-family: sans-serif;
@@ -276,16 +370,32 @@ header a ~ p {
 	-o-transition: background-color .25s;
 	transition: background-color .25s;
 }
-
 a:nth-child(even) > .poll {
-	background-color: #feffe3;
+	background-color: #EEFFCD;
 }
-
 .polls > a > .poll:hover {
 	background-color: #9cd5ff;
 	cursor: pointer;
 }
-
+.isCreator, .isNotCreator, .hasVoted, .hasNotVoted {
+	border-radius: 30px;
+	width: 24px;
+    height: 24px;
+    top: 4px;
+    position: relative;
+    margin-right: 7%;
+	display: inline-block;
+}
+.isCreator {
+	fill: #47B1FC;
+    position: relative;
+    top: 2px;
+}
+.hasVoted {
+    fill: #74FE8C;
+    position: relative;
+    top: 2px;
+}
 /****** Logo Div Styling ******/
 
 img {

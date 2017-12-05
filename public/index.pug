@@ -1,0 +1,149 @@
+
+
+doctype html
+html
+  head
+    title Vote Everything!
+    link(href='/public/css/main.css', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Barlow', rel='stylesheet')
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js")
+    script(src='http://platform.twitter.com/widgets.js', type='text/javascript')
+    script.
+      window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function(f) {
+        t._e.push(f);
+      };
+      return t;
+      }(document, "script", "twitter-wjs"));
+
+
+
+  body
+    nav#cssmenu
+      ul
+        // li > a > div for svg alignment fix and force heights
+        li.active
+          a(href='#')
+            div Home 
+        li
+          a(onclick='login()' href="#")
+            div
+              svg.octicon.octicon-mark-github(aria-hidden='true', version='1.1', viewBox='0 0 16 16', height='32', width='32')
+                path(fill-rule='evenodd', d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z')
+              | LOGIN WITH GITHUB
+    .container
+      .titleContainer
+        .login
+          h1
+            | Vote on all the things!
+          h3
+            | Click a poll to vote, or login and create your own!
+      .pollInfo
+        h1
+          | Title
+          a.twitter-share-button(href="https://twitter.com/intent/tweet?text=Poll%20results%20for%20title")
+            | Tweet
+        .pollDescription
+          p
+            | Description DescriptionDescriptionDescriptionDescription Description Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description 
+          form(action="#")
+            button.addOption
+              span
+                | +
+              | create option
+            each selectOption in selectOptions
+              input(type='radio', name='votePoll', value=selectOption.id id=selectOption.var_name)
+              label(for=selectOption.var_name)
+                |  #{selectOption.var_name} 
+        .chartContainer
+          canvas#myChart()
+      .polls    
+        .pollHeader
+          .title
+            | Title
+          .isCreator
+            | Creator
+          .hasVoted
+            | Voted
+          .votes
+            | Votes Cast
+        for poll in polls
+          a
+            .poll
+              .title
+                | #{poll.title}
+              if poll.isCreator
+                .isCreator
+                  svg(class='isCreator' viewbox='0 0 24 24')
+                    path(d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z')
+                    path(d='M0 0h24v24H0z', fill='none')
+
+              else
+                .isNotCreator
+              if poll.hasVoted
+                .hasVoted
+                  svg(class='hasVoted' viewbox='0 0 24 24')
+                    path(d='M0 0h24v24H0z', fill='none')
+                    path(d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z')
+              else
+                .hasNotVoted
+              .votes
+                | #{poll.votes}
+                
+  script.
+    function swapToChart(){
+    	
+    }
+    
+    function login(){
+    	alert('hi');
+    	fetch('/auth/github').then(function(response){
+      	console.log('first')
+    		return response.json();
+    	}).then(function(json){
+      	console.log('second')
+    		console.log(json);
+    	}).catch(function(err){ console.log(err)});
+    }
+    
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    options: {
+            legend: {
+                position: 'left'
+            }
+        },
+    data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }});
