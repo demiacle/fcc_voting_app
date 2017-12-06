@@ -136,7 +136,7 @@
     display: none;
   }
 }
-.octicon {
+.octicon, #twitterIcon {
 	fill: white;
 	position: relative;
     top: -8px;
@@ -236,6 +236,27 @@ button.addOption:active {
   float: left;
   margin: 8px;
   margin-right: -60px;
+}
+input[type="submit"]:active {
+    border-style: inset;
+    background-color: #77c5ff;
+}
+input[type="submit"]:hover {
+    background-color: #77c5ff;
+}
+input[type="submit"] {
+    margin: auto;
+    width: 82%;
+    display: block;
+    border-radius: 29px;
+    border: 2px;
+    border-style: outset;
+    padding: 6px;
+    background-color: #9cd5ff;
+    font-size: 16pt;
+    text-shadow: 1px 1px 1px #0e446c;
+    margin-top: 20px;
+    cursor: pointer;
 }
 .addOption {
   margin: 0;

@@ -9,6 +9,7 @@ module.exports = function (app, passport) {
 	app.set("views", p.join(__dirname, "public"));
 
 	function isLoggedIn (req, res, next) {
+		console.log('w')
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
@@ -18,10 +19,9 @@ module.exports = function (app, passport) {
 
 	var clickHandler = new ClickHandler();
 
-
-// TODO remove login route
 	app.route([ '/', '/login' ])
 		.get(function (req, res) {
+			
 			// query db for title and votes
 			// reorder query so created posts are first
 			// truncate titles to about 50
@@ -51,10 +51,19 @@ module.exports = function (app, passport) {
 			req.logout();
 			res.redirect('/login');
 		});
+		
+	app.route('/failed')
+		.get(function (req, res) {
+			res.send('login failed')
+		});
 
 	app.route('/profile')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/profile.html');
+		.get( function (req, res) {
+			if( req.isAuthenticated() ){
+				res.send('you are logged in');
+			} else {
+				res.send('you are logged out');
+			}
 		});
 
 	app.route('/api/:id')
@@ -63,30 +72,20 @@ module.exports = function (app, passport) {
 		});
 
 	app.route('/auth/github')
-		.get( function( req, res, next ){
-			passport.authenticate('github', function(err, user, info) {
-				if(err)
-					return res.status(500).json(err);
-				if(!user)
-					return res.status(401).json(info.message);
-					
-					console.log( user )
-				res.json({})
-			})(req, res, next )
-		});
+		.get(passport.authenticate('github'));
+		
+	app.route('/auth/twitter')
+		.get(passport.authenticate('twitter'));
+	app.route('/auth/twitter/callback')
+		.get(passport.authenticate('twitter', {
+                       successRedirect: '/',
+                       failureRedirect: '/failed'
+               }));
 
 	app.route('/auth/github/callback')
-		.get(function (req, res, next) {
-			console.log( 'yea ')
-			passport.authenticate('github', function(err, user, info) {
-				if(err)
-					return res.status(500).json(err);
-				if(!user)
-					return res.status(401).json(info.message);
-					
-					console.log( user )
-				res.json({})
-			})(req, res, next )
-		});
+		.get(passport.authenticate('github', {
+                       successRedirect: '/',
+                       failureRedirect: '/failed'
+               }));
 
 };
