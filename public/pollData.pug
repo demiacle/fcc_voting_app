@@ -1,0 +1,20 @@
+.pollInfo
+  h1
+    | Title
+    a.twitter-share-button(href="https://twitter.com/intent/tweet?text=Poll%20results%20for%20title")
+      | Tweet
+  .pollDescription
+    p
+      | Description escriptionDescriptionDescriptionDescription Description Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description 
+    form(action="#")
+      button.addOption
+        span
+          | +
+        | create option
+      each selectOption in selectOptions
+        input(type='radio', name='votePoll', value=selectOption.id id=selectOption.var_name)
+        label(for=selectOption.var_name)
+          |  #{selectOption.var_name}
+      input(type="submit" value="Vote")
+  .chartContainer
+    canvas#myChart(D)

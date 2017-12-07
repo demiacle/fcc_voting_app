@@ -3,6 +3,7 @@
 var path = process.cwd();
 var p = require('path')
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
+var parseUserData = require(path + '/app/controllers/parseUserData.server.js')
 
 module.exports = function (app, passport) {
 	app.set("view engine", "pug" )
@@ -17,10 +18,24 @@ module.exports = function (app, passport) {
 		}
 	}
 
+
 	var clickHandler = new ClickHandler();
 
 	app.route([ '/', '/login' ])
-		.get(function (req, res) {
+		.get( function (req, res) {
+			if( req.isAuthenticated() ){
+				console.log(req.user)
+				console.log( parseUserData)
+				var vars;
+				if( req.user.github.id !== undefined ){
+					vars = parseUserData(req.user.github.id)
+				} else {
+					vars = parseUserData(req.user.twitter.id)
+				}
+
+				res.render(path + '/public/index.pug', vars );
+				return;
+			}
 			
 			// query db for title and votes
 			// reorder query so created posts are first
@@ -60,20 +75,13 @@ module.exports = function (app, passport) {
 	app.route('/profile')
 		.get( function (req, res) {
 			if( req.isAuthenticated() ){
+				console.log( req.user.votes)
 				res.send('you are logged in');
 			} else {
 				res.send('you are logged out');
 			}
 		});
 
-	app.route('/api/:id')
-		.get(isLoggedIn, function (req, res) {
-			res.json(req.user.github);
-		});
-
-	app.route('/auth/github')
-		.get(passport.authenticate('github'));
-		
 	app.route('/auth/twitter')
 		.get(passport.authenticate('twitter'));
 	app.route('/auth/twitter/callback')
@@ -82,6 +90,8 @@ module.exports = function (app, passport) {
                        failureRedirect: '/failed'
                }));
 
+	app.route('/auth/github')
+		.get(passport.authenticate('github'));
 	app.route('/auth/github/callback')
 		.get(passport.authenticate('github', {
                        successRedirect: '/',
