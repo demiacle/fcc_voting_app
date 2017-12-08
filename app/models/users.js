@@ -15,9 +15,7 @@ var user = new Schema({
 		username: String
 	},
     votesCast: [],
-    postsCreated: {
-       _id: String
-    }
+    postsCreated: []
 });
 
 module.exports = mongoose.model('User', user);

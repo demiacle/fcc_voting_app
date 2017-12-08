@@ -13,9 +13,33 @@
   font-weight: 500;
   src: local('Roboto Medium'), local('Roboto-Medium'), url('../fonts/Roboto-Medium.ttf') format('truetype');
 }
+.floatRight {
+  float:right !important;
+  padding: 20px !important;
+}
+#createPollForm {
+  width: 700px;
+  margin: auto;
+}
+#createPollForm .title, #createPollForm .description, #createPollForm .options {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
 
+  margin: 4px;
+  border: 1px solid rgb(169, 169, 169);
+}
+sub {
+  color: rgb(169, 169, 169);
+}
+#createPollForm .description {
+}
+#createPollForm .options {
+}
 /****** Nav Styling ******/
-
+nav {
+  min-width: 850px;
+}
 #cssmenu {
   background: #9cd5ff;
   width: auto;
@@ -195,9 +219,10 @@ select, button {
 }
 .container {
 	font-family: 'Barlow', sans-serif;
-    min-width: 800px;
+    min-width: 850px;
     color: #333333;
 }
+
 
 input[type="radio"] {
 	display: none;

@@ -4,6 +4,8 @@ var path = process.cwd();
 var p = require('path')
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 var parseUserData = require(path + '/app/controllers/parseUserData.server.js')
+var createNewPoll = require(path + '/app/controllers/createNewPoll.server.js')
+var getPollData = require(path + '/app/controllers/getPollData.server.js')
 
 module.exports = function (app, passport) {
 	app.set("view engine", "pug" )
@@ -18,19 +20,36 @@ module.exports = function (app, passport) {
 		}
 	}
 
+	function getUserData( req ){
+		if (req.isAuthenticated()) {
+			//console.log('user is auth')
+			//console.log(req.user)
+			var vars;
+			if (req.user.github.id !== undefined) {
+				vars = parseUserData(req.user.github)
+			} else {
+				vars = parseUserData(req.user.twitter)
+			}
+
+			//res.render(path + '/public/index.pug', vars);
+			return vars;
+		} else {
+			return 
+		}
+	}
 
 	var clickHandler = new ClickHandler();
 
 	app.route([ '/', '/login' ])
 		.get( function (req, res) {
 			if( req.isAuthenticated() ){
-				console.log(req.user)
-				console.log( parseUserData)
+				//console.log('user is auth')
+				//console.log(req.user)
 				var vars;
 				if( req.user.github.id !== undefined ){
-					vars = parseUserData(req.user.github.id)
+					vars = parseUserData(req.user.github)
 				} else {
-					vars = parseUserData(req.user.twitter.id)
+					vars = parseUserData(req.user.twitter)
 				}
 
 				res.render(path + '/public/index.pug', vars );
@@ -66,6 +85,10 @@ module.exports = function (app, passport) {
 			req.logout();
 			res.redirect('/login');
 		});
+	app.route('/post/:id')
+		.get(function (req, res ){
+			getPollData(req, res, req.params.id);
+		});
 		
 	app.route('/failed')
 		.get(function (req, res) {
@@ -75,12 +98,28 @@ module.exports = function (app, passport) {
 	app.route('/profile')
 		.get( function (req, res) {
 			if( req.isAuthenticated() ){
-				console.log( req.user.votes)
 				res.send('you are logged in');
 			} else {
 				res.send('you are logged out');
 			}
 		});
+	app.route('/createNewPoll')
+		.post( function(req, res) {
+			if( req.isAuthenticated() ) {
+				createNewPoll(req);
+				res.redirect('/');
+			} else {
+				res.send()
+			}
+		})
+	app.route('/newPollForm')
+		.get( function(req, res) {
+			if(req.isAuthenticated()){
+				res.render(path + '/public/newPollForm.pug');
+			} else {
+				res.send('You must be logged in to do that')
+			}
+		})
 
 	app.route('/auth/twitter')
 		.get(passport.authenticate('twitter'));
