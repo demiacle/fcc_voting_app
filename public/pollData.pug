@@ -1,20 +1,58 @@
 .pollInfo
-  h1
-    | Title
-    a.twitter-share-button(href="https://twitter.com/intent/tweet?text=Poll%20results%20for%20title")
+  div.headerBar 
+    a.twitter-share-button(href="https://twitter.com/intent/tweet?text=" + currentPoll.description.substring(0,80) )
       | Tweet
   .pollDescription
     p
-      | Description escriptionDescriptionDescriptionDescription Description Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description  Description 
+      | #{currentPoll.description}
     form(action="#")
-      button.addOption
-        span
-          | +
-        | create option
-      each selectOption in selectOptions
-        input(type='radio', name='votePoll', value=selectOption.id id=selectOption.var_name)
-        label(for=selectOption.var_name)
-          |  #{selectOption.var_name}
+      if isLoggedIn
+        button.addOption
+          span
+            | +
+          | create option
+      each selectOption in currentPoll.pollOptions
+        input(type='radio', name='votePoll', value=selectOption._id id=selectOption.option)
+        label(for=selectOption.option)
+          |  #{selectOption.option}
       input(type="submit" value="Vote")
-  .chartContainer
+  #chartContainer
     canvas#myChart(D)
+
+  script.
+    var currentPoll = !{JSON.stringify(currentPoll)};
+    console.log( currentPoll)
+    var ctx = document.getElementById("myChart");
+    var lightColors = [];
+    var darkColors = [];
+    currentPoll.pollOptions.map( (i)=>{ 
+      var r = Math.floor( Math.random() * 255 );
+      var g = Math.floor( Math.random() * 255 );
+      var b = Math.floor( Math.random() * 255 );
+      
+      lightColors.push( `rgba(${r}, ${g}, ${b}, 0.2)` ); 
+      darkColors.push( `rgba(${r}, ${g}, ${b}, 1)` );
+    });
+
+    if( currentPoll.totalVotes < 1 ){
+      document.getElementById( 'chartContainer' ).innerHTML = '<p>No votes yet!</p>'
+    } else {
+      var myChart = new Chart(ctx, {
+      type: 'pie',
+      options: {
+              legend: {
+                  position: 'left'
+              }
+          },
+      data: {
+          labels: currentPoll.pollOptions.map( (i)=>{ return i.option }),
+        
+          datasets: [{
+              label: '# of Votes',
+              data: currentPoll.pollOptions.map( (i)=>{ return i.votes }),
+              backgroundColor: darkColors,
+              borderColor: lightColors,
+              borderWidth: 1
+          }]
+      }});
+    }

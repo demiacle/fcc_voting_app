@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session');
 var bodyParser = require('body-parser')
+var p = require('path')
 
 var app = express();
 require('dotenv').load();
@@ -28,6 +29,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set("view engine", "pug")
+app.set("views", p.join(__dirname, "public"));
 routes(app, passport);
 
 var port = process.env.PORT || 8080;

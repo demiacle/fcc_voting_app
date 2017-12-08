@@ -7,6 +7,12 @@ function createNewPoll(req){
     newPoll.title = req.body.title;
     newPoll.description = req.body.description;
     var options = req.body.options.split( /\r?\n|\r/g );
+    options = options.map((i)=>{
+        return {
+            option: i,
+            votes: 0
+        }
+    })
     newPoll.pollOptions = options;
     newPoll.totalVotes = 0;
     newPoll.save(function (err, updatedPoll) {

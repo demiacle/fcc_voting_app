@@ -1,6 +1,9 @@
 include header.pug
-form( action="/createNewPoll" onsubmit="return createNewPoll(this);" method="post")#createPollForm
-  input( type='text' name='title' placeholder='title' required).title
+include nav.pug
+h1
+  | Create your own poll
+br
+form( action="/createNewPoll" method="post")#createPollForm
   input( type='text' name='description' placeholder='description' required).description
   br
   sub

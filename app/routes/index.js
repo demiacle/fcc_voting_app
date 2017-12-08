@@ -1,28 +1,15 @@
 'use strict';
 
 var path = process.cwd();
-var p = require('path')
-var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 var parseUserData = require(path + '/app/controllers/parseUserData.server.js')
 var createNewPoll = require(path + '/app/controllers/createNewPoll.server.js')
 var getPollData = require(path + '/app/controllers/getPollData.server.js')
+var getPolls = require(path + '/app/controllers/getPolls.server.js')
 
 module.exports = function (app, passport) {
-	app.set("view engine", "pug" )
-	app.set("views", p.join(__dirname, "public"));
-
-	function isLoggedIn (req, res, next) {
-		console.log('w')
-		if (req.isAuthenticated()) {
-			return next();
-		} else {
-			res.redirect('/login');
-		}
-	}
 
 	function getUserData( req ){
 		if (req.isAuthenticated()) {
-			//console.log('user is auth')
 			//console.log(req.user)
 			var vars;
 			if (req.user.github.id !== undefined) {
@@ -30,20 +17,17 @@ module.exports = function (app, passport) {
 			} else {
 				vars = parseUserData(req.user.twitter)
 			}
-
-			//res.render(path + '/public/index.pug', vars);
 			return vars;
 		} else {
-			return 
+			return {};
 		}
 	}
 
-	var clickHandler = new ClickHandler();
 
 	app.route([ '/', '/login' ])
-		.get( function (req, res) {
+		.get( getPolls, function (req, res) {
+			// Change to middleware
 			if( req.isAuthenticated() ){
-				//console.log('user is auth')
 				//console.log(req.user)
 				var vars;
 				if( req.user.github.id !== undefined ){
@@ -51,32 +35,18 @@ module.exports = function (app, passport) {
 				} else {
 					vars = parseUserData(req.user.twitter)
 				}
-
+				vars.polls = res.locals.polls;
 				res.render(path + '/public/index.pug', vars );
 				return;
 			}
 			
+				//console.log('yo')
+				console.log(res.locals.polls);
 			// query db for title and votes
 			// reorder query so created posts are first
 			// truncate titles to about 50
-			var vars = { polls: [
-				{ title: 'hi', hasVoted: false, isCreator: true, votes: 3 },
-				{ title: 'hddi', hasVoted: true, isCreator: false, votes: 2 },
-				{ title: 'hfffadfadfasfasfdsadfasdfasdfasfdasdfasfdasfasfasdfasdfasf adf adsf asdfdfasdfasfasffafi', hasVoted: false, isCreator: false, votes: 5 },
-				{ title: 'hf34321i', hasVoted: true, isCreator: true, votes: 7 },
-				{ title: 'h09i', hasVoted: false, isCreator: true, votes: 9 }
-				],
-				selectOptions: [
-					{
-						id: 'someId',
-						var_name: 'someVarName'
-					},
-					{
-						id: 'someOtherId',
-						var_name: 'someOtherName'
-					}
-				]
-			}
+			var vars = { polls: res.locals.polls }
+
 			res.render(path + '/public/index.pug', vars );
 		});
 
@@ -86,23 +56,10 @@ module.exports = function (app, passport) {
 			res.redirect('/login');
 		});
 	app.route('/post/:id')
-		.get(function (req, res ){
-			getPollData(req, res, req.params.id);
+		.get( getPolls, function (req, res ){
+			getPollData(req, res, getUserData( req ) );
 		});
 		
-	app.route('/failed')
-		.get(function (req, res) {
-			res.send('login failed')
-		});
-
-	app.route('/profile')
-		.get( function (req, res) {
-			if( req.isAuthenticated() ){
-				res.send('you are logged in');
-			} else {
-				res.send('you are logged out');
-			}
-		});
 	app.route('/createNewPoll')
 		.post( function(req, res) {
 			if( req.isAuthenticated() ) {

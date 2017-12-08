@@ -1,7 +1,7 @@
 .polls    
   .pollHeader
     .title
-      | Title
+      | Poll
     .isCreator
       | Creator
     .hasVoted
@@ -9,10 +9,10 @@
     .votes
       | Votes Cast
   for poll in polls
-    a
+    a(href="/post/" + poll._id)
       .poll
         .title
-          | #{poll.title}
+          | #{poll.description}
         if poll.isCreator
           .isCreator
             svg(class='isCreator' viewbox='0 0 24 24')
