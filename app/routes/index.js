@@ -7,75 +7,50 @@ var getPollData = require(path + '/app/controllers/getPollData.server.js')
 var getPolls = require(path + '/app/controllers/getPolls.server.js')
 
 module.exports = function (app, passport) {
-
-	function getUserData( req ){
-		if (req.isAuthenticated()) {
-			//console.log(req.user)
-			var vars;
-			if (req.user.github.id !== undefined) {
-				vars = parseUserData(req.user.github)
-			} else {
-				vars = parseUserData(req.user.twitter)
-			}
-			return vars;
+	//console.log(req.user)
+	function isLoggedIn(req, res, next){
+		if( req.isAuthenticated() ){
+			res.locals.isLoggedIn = true;
+			next();
 		} else {
-			return {};
+			next();
 		}
 	}
-
+	function requireLoggedIn( req, res, next ){
+		if( req.isAuthenticated() ){
+			next();
+		} else {
+			res.redirect('/');
+		}
+	}
+	function parseLocalData (req, res, next){
+		console.log( 'LOCALS ARE')
+		console.log( res.locals )
+		next();
+	}
 
 	app.route([ '/', '/login' ])
-		.get( getPolls, function (req, res) {
-			// Change to middleware
-			if( req.isAuthenticated() ){
-				//console.log(req.user)
-				var vars;
-				if( req.user.github.id !== undefined ){
-					vars = parseUserData(req.user.github)
-				} else {
-					vars = parseUserData(req.user.twitter)
-				}
-				vars.polls = res.locals.polls;
-				res.render(path + '/public/index.pug', vars );
-				return;
-			}
-			
-				//console.log('yo')
-				console.log(res.locals.polls);
-			// query db for title and votes
-			// reorder query so created posts are first
-			// truncate titles to about 50
+		.get( getPolls, isLoggedIn, parseLocalData, function (req, res) {
 			var vars = { polls: res.locals.polls }
-
 			res.render(path + '/public/index.pug', vars );
 		});
-
 	app.route('/logout')
 		.get(function (req, res) {
 			req.logout();
 			res.redirect('/login');
 		});
 	app.route('/post/:id')
-		.get( getPolls, function (req, res ){
-			getPollData(req, res, getUserData( req ) );
+		.get( getPolls, isLoggedIn, getPollData, parseLocalData, function (req, res ){
+			res.render(path + '/public/index.pug')
 		});
-		
 	app.route('/createNewPoll')
-		.post( function(req, res) {
-			if( req.isAuthenticated() ) {
-				createNewPoll(req);
-				res.redirect('/');
-			} else {
-				res.send()
-			}
+		.post( requireLoggedIn, function(req, res) {
+			createNewPoll(req);
+			res.redirect('/');
 		})
 	app.route('/newPollForm')
-		.get( function(req, res) {
-			if(req.isAuthenticated()){
-				res.render(path + '/public/newPollForm.pug');
-			} else {
-				res.send('You must be logged in to do that')
-			}
+		.get( requireLoggedIn, isLoggedIn, function(req, res) {
+			res.render(path + '/public/newPollForm.pug');
 		})
 
 	app.route('/auth/twitter')
