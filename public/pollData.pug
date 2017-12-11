@@ -1,18 +1,25 @@
 .pollInfo
   div.headerBar 
-    a.twitter-share-button(href="https://twitter.com/intent/tweet?text=" + currentPoll.description.substring(0,80) )
+    a.twitter-share-button(href="https://twitter.com/intent/tweet?text=Checkout%20my%20poll:%20" + currentPoll.description.substring(0,80) )
       | Tweet
+    if currentPoll.isCreator
+      a(href="/deletePoll/" + currentPoll._id )#deletePoll
+        | Delete
   .pollDescription
     p
       | #{currentPoll.description}
-    form(action="#")
       if isLoggedIn
-        button.addOption
+        form(action="/createNewOption/" + currentPoll._id, method="POST")#createOptionModal
+          input(type="text" name="newOption" placeholder="newOption" required).addOption
+          input(type="submit" name="create" value="create")
+        button(onclick="showModal()").addOption
           span
             | +
           | create option
+    form(action="/vote/" + currentPoll._id, method="POST" )
       each selectOption in currentPoll.pollOptions
-        input(type='radio', name='votePoll', value=selectOption._id id=selectOption.option)
+        // add feedback if radio button is not chosen
+        input(type='radio', name='votePoll', value=selectOption._id id=selectOption.option required)
         label(for=selectOption.option)
           |  #{selectOption.option}
       input(type="submit" value="Vote")
@@ -20,6 +27,10 @@
     canvas#myChart(D)
 
   script.
+    function showModal(){
+      document.getElementById('createOptionModal').style.display = 'block';
+    }
+
     var currentPoll = !{JSON.stringify(currentPoll)};
     //console.log( currentPoll)
     var ctx = document.getElementById("myChart");
@@ -50,8 +61,36 @@
           datasets: [{
               label: '# of Votes',
               data: currentPoll.pollOptions.map( (i)=>{ return i.votes }),
-              backgroundColor: darkColors,
-              borderColor: lightColors,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)'
+            ],
               borderWidth: 1
           }]
       }});

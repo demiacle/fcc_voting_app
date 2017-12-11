@@ -13,6 +13,9 @@ html
             | Vote on all the things!
           h3
             | Click a poll to vote, or login and create your own!
+      if error
+        h2#error
+          | #{error}
       if currentPoll
         include pollData.pug
       include allPolls.pug

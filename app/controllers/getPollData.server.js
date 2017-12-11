@@ -10,7 +10,9 @@ function getPollData(req, res, next){
         if(err)
             throw err;
         res.locals.currentPoll = poll;
-        // compare poll data to user and add to variable 
+        if( res.locals.isLoggedIn && poll.owner == req.user._id ){
+            res.locals.currentPoll.isCreator = true;
+        }
         next();
     })
 }

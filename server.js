@@ -29,6 +29,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set('trust proxy', true)
+
 app.set("view engine", "pug")
 app.set("views", p.join(__dirname, "public"));
 routes(app, passport);

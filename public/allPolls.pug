@@ -9,7 +9,7 @@
     .votes
       | Votes Cast
   for poll in polls
-    a(href="/post/" + poll._id)
+    a(href="/poll/" + poll._id)
       .poll
         .title
           | #{poll.description}
