@@ -441,6 +441,9 @@ header a ~ p {
     border-bottom: 1px solid #9cd5ff;
     padding-bottom: 20px;
 }
+.polls a {
+  color: #3b3b3b;
+}
 
 .title, .votes {
 	display: inline-block;
@@ -478,7 +481,10 @@ a:nth-child(even) > .poll {
 }
 .polls > a > .poll:hover {
 	background-color: #9cd5ff;
-	cursor: pointer;
+  cursor: pointer;
+}
+.polls > a > .poll:active {
+  background-color: #5ebbff;
 }
 .isCreator, .isNotCreator, .hasVoted, .hasNotVoted {
 	border-radius: 30px;
