@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 function getPolls(req, res, next){
     polls.find({}, 'description owner pollOptions totalVotes', function(err, pollSchema){
         if( res.locals.isLoggedIn ){
-            console.log(req.user)
+            //console.log(req.user)
             var parsedPolls = pollSchema.map( function(i){
                 if( i.owner == req.user._id ){
                     i.isCreator = true;

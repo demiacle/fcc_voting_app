@@ -355,7 +355,8 @@ input[type="submit"] {
 label::before {
 	display: block;
 	height: 1.125rem;
-	width: 1.125rem;
+  width: 1.125rem;
+  min-width: 1.125rem;
 	margin-right: 0.625rem;
 	content: "";
 	border: 3px solid #9cd5ff;
@@ -448,11 +449,17 @@ header a ~ p {
 .title, .votes {
 	display: inline-block;
 }
-
-#chartContainer, .pollDescription {
+.pollDescription, #chartContainer {
+  display: inline-block;
+  vertical-align: middle;
+}
+.pollDescription {
     width: 42%;
-    display: inline-block;
     padding-left: 7%;
+}
+#chartContainer {
+  padding-left: 1%;
+  width: 48%;
 }
 
 .title {

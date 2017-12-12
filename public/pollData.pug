@@ -19,8 +19,8 @@
     form(action="/vote/" + currentPoll._id, method="POST" )
       each selectOption in currentPoll.pollOptions
         // add feedback if radio button is not chosen
-        input(type='radio', name='votePoll', value=selectOption._id id=selectOption.option required)
-        label(for=selectOption.option)
+        input(type='radio', name='votePoll', value=selectOption._id, id=selectOption._id required)
+        label(for=selectOption._id)
           |  #{selectOption.option}
       input(type="submit" value="Vote")
   #chartContainer
@@ -56,7 +56,7 @@
               }
           },
       data: {
-          labels: currentPoll.pollOptions.map( (i)=>{ return i.option }),
+          labels: currentPoll.pollOptions.map( (i)=>{ return i.option.substring(0, 30) }),
         
           datasets: [{
               label: '# of Votes',
