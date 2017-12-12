@@ -24,7 +24,7 @@
           |  #{selectOption.option}
       input(type="submit" value="Vote")
   #chartContainer
-    canvas#myChart(D)
+    canvas#myChart()
 
   script.
     function showModal(){
@@ -51,6 +51,10 @@
       var myChart = new Chart(ctx, {
       type: 'pie',
       options: {
+              onResize: (chart)=>{
+                  chart.options.legend.display=(document.getElementById("myChart").width > 450);
+                  chart.update();
+              },              
               legend: {
                   position: 'left'
               }
