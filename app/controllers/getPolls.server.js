@@ -11,7 +11,7 @@ function getPolls(req, res, next){
                 if( i.owner == req.user._id ){
                     i.isCreator = true;
                 }
-                if( req.user.votesCast.includes( i._id ) == false ){
+                if( req.user.votesCast.includes( i._id.toString() ) == true ){
                     i.hasVoted = true;
                 }
                 return i;
@@ -26,7 +26,7 @@ function getPolls(req, res, next){
                     if (i.owner == user._id) {
                         i.isCreator = true;
                     }
-                    if (user.votesCast.includes(i._id) == false) {
+                    if (user.votesCast.includes(i._id.toString()) == true) {
                         i.hasVoted = true;
                     }
                     return i;
